@@ -48,7 +48,7 @@ export class FeedPage {
     this.movieProvider.getLatestMovie().subscribe(
       data => {
         const response = (data as any);
-        const objeto_retorno = response;
+        const objeto_retorno = JSON.parse(response._body);
         console.log(objeto_retorno);
 
       }, error => {
