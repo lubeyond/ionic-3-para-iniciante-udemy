@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { MovieProvider } from '../../providers/movie/movie';
-import 'rxjs/add/operator/map';
+
 
 /**
  * Generated class for the FeedPage page.
@@ -30,6 +30,8 @@ export class FeedPage {
 
   }
 
+  public lista_filmes = new Array<any>();
+
   public nome_usuario: string = "Faculdade FGF";
 
   constructor(
@@ -45,16 +47,17 @@ export class FeedPage {
   }
 
   ionViewDidLoad() {
+    console.log('ionViewDidLoad FeedPage');
     this.movieProvider.getLatestMovie().subscribe(
       data => {
+        console.log(data);
         const response = (data as any);
-        const objeto_retorno = JSON.parse(response._body);
-        console.log(objeto_retorno);
-
-      }, error => {
+        this.lista_filmes = response.results;
+        console.log(this.lista_filmes);
+      },
+      error => {
         console.log(error);
       }
     )
   }
-
 }
