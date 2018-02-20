@@ -32,11 +32,14 @@ export class FeedPage {
   }
 
   public lista_filmes = new Array<any>();
+  public page = 1;
 
   public nome_usuario: string = "Faculdade FGF";
   public loader;
   public refresher;
   public isRefreshing: boolean = false;
+  public infiniteScroll;
+
 
   constructor(
     public navCtrl: NavController,
@@ -72,37 +75,53 @@ export class FeedPage {
 
   ionViewDidEnter() {
     this.carregarFilmes();
+
+  }
+
+  abrirDetalhe(filme) {
+    console.log(filme);
+    this.navCtrl.push(FilmeDetalhePage, { id: filme.id });
+  }
+
+  doInfinite(infiniteScroll) {
+    this.page++;
+    this.infiniteScroll = infiniteScroll;
+    this.carregarFilmes(true);
+    
     
   }
 
-  abrirDetalhe(filme){
-    console.log(filme);
-    this.navCtrl.push(FilmeDetalhePage, {id: filme.id});
-  }
-
-  carregarFilmes(){
+  carregarFilmes(newpage: boolean = false) {
 
     this.abreCarregando();
     console.log('ionViewDidEnter FeedPage');
-    this.movieProvider.getLatestMovie().subscribe(
+    this.movieProvider.getLatestMovie(this.page).subscribe(
       data => {
         console.log(data);
         const response = (data as any);
-        this.lista_filmes = response.results;
-        console.log(this.lista_filmes);
+
+        if(newpage){
+          this.lista_filmes = this.lista_filmes.concat(response.results);
+          this.infiniteScroll.complete();
+        }else{
+          this.lista_filmes = response.results;
+        }
+
         
+        console.log(this.lista_filmes);
+
         this.fechaCarregando();
-        if(this.isRefreshing){
+        if (this.isRefreshing) {
           this.refresher.complete();
-          this.isRefreshing = false; 
+          this.isRefreshing = false;
         }
       },
       error => {
         console.log(error);
         this.fechaCarregando();
-        if(this.isRefreshing){
+        if (this.isRefreshing) {
           this.refresher.complete();
-          this.isRefreshing = false; 
+          this.isRefreshing = false;
         }
       }
     )
