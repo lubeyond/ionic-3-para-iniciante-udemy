@@ -34,6 +34,8 @@ export class FeedPage {
 
   public nome_usuario: string = "Faculdade FGF";
   public loader;
+  public refresher;
+  public isRefreshing: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -44,15 +46,15 @@ export class FeedPage {
   ) {
   }
 
-  abreCarregando(){
+  abreCarregando() {
     this.loader = this.loadingCtrl.create({
       content: "Carregando filmes...",
-      
+
     });
     this.loader.present();
   }
 
-  fechaCarregando(){
+  fechaCarregando() {
     this.loader.dismiss();
   }
 
@@ -60,7 +62,20 @@ export class FeedPage {
     alert(num1 + num2);
   }
 
+  doRefresh(refresher) {
+    this.refresher = refresher;
+    this.isRefreshing = true;
+    this.carregarFilmes();
+
+  }
+
   ionViewDidEnter() {
+    this.carregarFilmes();
+    
+  }
+
+  carregarFilmes(){
+
     this.abreCarregando();
     console.log('ionViewDidEnter FeedPage');
     this.movieProvider.getLatestMovie().subscribe(
@@ -69,12 +84,22 @@ export class FeedPage {
         const response = (data as any);
         this.lista_filmes = response.results;
         console.log(this.lista_filmes);
+        
         this.fechaCarregando();
+        if(this.isRefreshing){
+          this.refresher.complete();
+          this.isRefreshing = false; 
+        }
       },
       error => {
         console.log(error);
         this.fechaCarregando();
+        if(this.isRefreshing){
+          this.refresher.complete();
+          this.isRefreshing = false; 
+        }
       }
     )
+
   }
 }
