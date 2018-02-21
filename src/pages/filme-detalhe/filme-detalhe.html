@@ -25,9 +25,11 @@
           <p class="feed_date">{{ filme.release_date }}</p>
         </ion-item>
     
-        <img [src]="'https://image.tmdb.org/t/p/w300/' + filme.backdrop_path">
+        <img [src]="'https://image.tmdb.org/t/p/w300/' + filme.poster_path">
     
         <ion-card-content>
+          <h1 align=center>{{ filme.title }}</h1>
+          <br>
           <p>{{ filme.overview }}</p>
         </ion-card-content>
     
