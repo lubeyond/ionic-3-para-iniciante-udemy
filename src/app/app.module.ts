@@ -11,7 +11,7 @@ import 'rxjs/add/operator/map';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { Http, HttpModule } from '@angular/http';
+import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 
 import { FeedPageModule } from '../pages/feed/feed.module';
